@@ -5,6 +5,7 @@ import LNascimento.Note_Taking_app.Services.CustomUserDetailsService;
 import LNascimento.Note_Taking_app.Services.jwtService; // Importe o serviço
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,8 +42,9 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/error").permitAll() // Adicione isso!
+                        .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/notes/**").hasRole("USER") // Ajuste conforme o nome no banco
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Ajuste conforme o nome no banco
                         .anyRequest().authenticated()

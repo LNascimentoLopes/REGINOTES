@@ -12,9 +12,9 @@ import java.util.Date;
 @Service
 public class jwtService {
 
-    @Value("${api.security.token.secret")
+    @Value("${api.security.token.secret}")
     private String SECRET;
-    @Value("${api.security.token.expiration")
+    @Value("${api.security.token.expiration:7200000}")
     private String EXPIRATION;
 
     public String generateToken(UserDetails user) {

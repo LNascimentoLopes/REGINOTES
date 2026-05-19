@@ -38,13 +38,18 @@ public class Mapper {
                note.getId(),
                note.getTags()
                        .stream()
-                       .map(Tags::getTagName)
+                       .map( tags -> new TagResponseDTO(tags.getId(), tags.getTagName(), tags.getTagColor()))
                        .collect(Collectors.toSet()));
-
-
-
         return response;
 
+    }
+
+    public TagResponseDTO TagToDTO(Tags tag){
+        TagResponseDTO responseDTO = new TagResponseDTO(
+                tag.getId(),
+                tag.getTagName(),
+                tag.getTagColor());
+        return responseDTO;
     }
 
     public Tags TagsDtoToEntity(CreateTagRequest request, CustomUserDetails user) {

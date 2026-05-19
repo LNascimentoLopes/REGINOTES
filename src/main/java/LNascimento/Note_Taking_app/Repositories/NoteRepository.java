@@ -32,4 +32,5 @@ public interface NoteRepository extends JpaRepository<Notes, UUID> {
     @Modifying
     @Query("UPDATE Notes n SET n.deletedAt = CURRENT_TIMESTAMP WHERE n.id = :id AND n.users.id = :UserId")
     void softDelete (@Param("id") UUID id, @Param("UserId") UUID userId);
+
 }

@@ -19,6 +19,6 @@ public class NotesDTOs {
             LocalDateTime updatedAt,
             LocalDateTime deletedAt,
             UUID id,
-            Set<String> tags // Ou Set<TagDTO> tags
+            Set<TagDTOs.TagResponseDTO> tags // Ou Set<TagDTO> tags
     ) {}
 }

@@ -35,6 +35,7 @@ public class AuthController {
     }
     @PostMapping("login")
     public ResponseEntity Login(@RequestBody loginRequest request){
+        System.out.println("controllerrrrr");
         String token;
         try {
             token = service.login(request.email(),request.password());
