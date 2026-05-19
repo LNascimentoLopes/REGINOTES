@@ -22,12 +22,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
-    private final jwtService jwtService; // Adicione esta dependência
+    private final jwtService jwtService;
+    private final JwtFilter jwtFilter;// Adicione esta dependência
 
     // Injete ambos no construtor
-    public SecurityConfig(CustomUserDetailsService userDetailsService, jwtService jwtService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService, jwtService jwtService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -35,7 +37,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         // Crie o filtro manualmente. Isso garante que ele exista APENAS dentro do Spring Security
-        JwtFilter jwtFilter = new JwtFilter(jwtService, userDetailsService);
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)

@@ -29,9 +29,6 @@ public class NotesController {
     private TagsService tServices;
 
 
-
-
-
     //basic crud
     @PostMapping
     public ResponseEntity<Map<String,String>> Create(@RequestBody NoteRequest request, @AuthenticationPrincipal CustomUserDetails user){

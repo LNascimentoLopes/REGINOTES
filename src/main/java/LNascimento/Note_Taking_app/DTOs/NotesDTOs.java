@@ -2,6 +2,7 @@ package LNascimento.Note_Taking_app.DTOs;
 
 import LNascimento.Note_Taking_app.Models.Tags;
 import LNascimento.Note_Taking_app.Models.Users;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -9,8 +10,17 @@ import java.util.Set;
 import java.util.UUID;
 
 public class NotesDTOs {
-    public record NoteRequest(String title, String content) {}
-    public record PatchNoteRequest(Optional<String> title, Optional<String> content){}
+    public record NoteRequest(
+            @NotBlank(message = "Title must not be blank")
+            String title,
+            @NotBlank(message = "Content must not be blank")
+            String content) {}
+
+    public record PatchNoteRequest(
+            Optional<String>
+            title,
+            Optional<String> content){}
+
     public record getNotesResponse(
             String title,
             String contentMarkdown,

@@ -3,6 +3,8 @@ package LNascimento.Note_Taking_app.Controllers;
 import LNascimento.Note_Taking_app.DTOs.AuthDTOs.registerRequest;
 import LNascimento.Note_Taking_app.DTOs.AuthDTOs.loginRequest;
 import LNascimento.Note_Taking_app.Services.AuthService;
+import jakarta.persistence.EntityExistsException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,24 +26,13 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity Register (@RequestBody registerRequest request){
-        try {
-            service.register(request);
-        }catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid parameters");
-        }
+    public ResponseEntity Register (@RequestBody @Valid registerRequest request){
+        service.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");
     }
     @PostMapping("login")
-    public ResponseEntity Login(@RequestBody loginRequest request){
-        System.out.println("controllerrrrr");
-        String token;
-        try {
-            token = service.login(request.email(),request.password());
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid parameters");
-        }
+    public ResponseEntity Login(@RequestBody @Valid loginRequest request){
+        String token = service.login(request.email(),request.password());
         return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 }

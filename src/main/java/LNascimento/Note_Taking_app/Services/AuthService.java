@@ -6,6 +6,8 @@ import LNascimento.Note_Taking_app.Models.Users;
 import LNascimento.Note_Taking_app.Repositories.UserRepository;
 import LNascimento.Note_Taking_app.Security.CustomUserDetails;
 import LNascimento.Note_Taking_app.Utils.Mapper;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,24 +31,21 @@ public class AuthService {
         this.mapper = mapper;
     }
 
-    public void register(registerRequest request) throws Exception {
+    public void register(registerRequest request){
 
         if (repository.findByEmail(request.email()).isPresent()){
-            throw new Exception();
+            throw new EntityExistsException("User already exists");
         }
         Users users = mapper.RegisterDtoToEntity(request, encoder);
         repository.save(users);
     }
 
     public String login (String email, String password){
-        Users user = repository.findByEmail(email).orElseThrow();
-        try {
-            authManager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
 
-        }catch (Exception e){
-            e.printStackTrace();
-            throw e;
-        }
+        Users user = repository.findByEmail(email).orElseThrow();
+
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
+
         UserDetails usd = new CustomUserDetails(user);
         return jwtService.generateToken(usd);
     }
