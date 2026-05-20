@@ -65,7 +65,7 @@ public class NotesServices {
 
     public Page<getNotesResponse> getAllNotes(CustomUserDetails user, Pageable pageable){
 
-        Page<Notes> notesPage = repository.findByUserId(user.getId(),pageable);
+        Page<Notes> notesPage = repository.findByUserId(user.getId(),pageable).orElseThrow(() -> new EntityNotFoundException("Note not found"));
         Page<getNotesResponse> dtoPage = notesPage.map(notes -> mapper.NotesToDto(notes));
 
         return dtoPage;
@@ -73,9 +73,9 @@ public class NotesServices {
 
     @Transactional
     public void deleteNoteById(UUID id, CustomUserDetails user){
+       repository.findByIdAndUserId(id,user.getId()).orElseThrow(() -> new EntityNotFoundException("Note not found"));
        repository.softDelete(id, user.getId());
     }
-
     @Transactional
     public Notes patchNote(UUID id, CustomUserDetails user, PatchNoteRequest request){
 
@@ -95,7 +95,7 @@ public class NotesServices {
 
     public Page<getNotesResponse> getAllTrashedNotes(CustomUserDetails user, Pageable pageable){
 
-        Page<Notes> notesPage = repository.findTrashedByUserId(user.getId(),pageable);
+        Page<Notes> notesPage = repository.findTrashedByUserId(user.getId(),pageable).orElseThrow(()->new EntityNotFoundException("Note not found"));
         Page<getNotesResponse> dtoPage = notesPage.map(notes -> mapper.NotesToDto(notes));
 
         return dtoPage;
@@ -103,11 +103,12 @@ public class NotesServices {
 
     @Transactional
     public void restoreNote(CustomUserDetails user, UUID id){
-        Notes note = repository.findTrashedByIdAndUserId(id, user.getId()).orElseThrow();
+        Notes note = repository.findTrashedByIdAndUserId(id, user.getId()).orElseThrow(() -> new EntityNotFoundException("Note not found"));
         note.setDeletedAt(null);
     }
     @Transactional
     public void PermanentDelete(CustomUserDetails user, UUID id){
+        repository.findTrashedByIdAndUserId(id,user.getId()).orElseThrow(() -> new EntityNotFoundException("Note not found"));
         repository.permaDelete(id,user.getId());
     }
 }

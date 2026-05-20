@@ -48,7 +48,12 @@ public class TagsService {
 
         Notes note = nRepository.findByIdAndUserId(noteId,user.getId()).orElseThrow(() -> new EntityNotFoundException("Note not Found"));
         Tags tag = tRepository.findByIdAndUserId(tagId, user.getId()).orElseThrow(() -> new EntityNotFoundException("Tag not Found"));
-        note.getTags().remove(tag);
+        if (note.getTags().contains(tag)){
+            note.getTags().remove(tag);
+        }else {
+            throw new EntityNotFoundException("Tag not assotiated");
+        }
+
     }
 
     @Transactional

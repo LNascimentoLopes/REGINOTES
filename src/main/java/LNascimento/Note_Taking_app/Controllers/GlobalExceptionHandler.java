@@ -4,6 +4,7 @@ import LNascimento.Note_Taking_app.DTOs.ExceptionDTOs.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -36,17 +39,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorDTO> handleValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {
 
-        // 1. Extrai a lista de erros do Spring e converte para o nosso DTO limpo
         List<FieldMessageDTO> fieldErrors = e.getBindingResult().getFieldErrors().stream()
                 .map(err -> new FieldMessageDTO(err.getField(), err.getDefaultMessage()))
                 .collect(Collectors.toList());
 
-        // 2. Monta o corpo da resposta
         ValidationErrorDTO error = new ValidationErrorDTO(
                 Instant.now(),
-                HttpStatus.BAD_REQUEST.value(), // Devolve HTTP 400
+                HttpStatus.BAD_REQUEST.value(),
                 "Validation Error",
-                "Erro na validação dos dados enviados",
+                "Data validation error",
                 request.getRequestURI(),
                 fieldErrors
         );
@@ -60,20 +61,18 @@ public class GlobalExceptionHandler {
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Malformed Request",
-                "O corpo da requisição (JSON) está ausente ou mal formatado.",
+                "the json body is missing or malformed",
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
-
-    // 2. Trata falta de parâmetros na URL (?param=valor)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<StandardErrorDTO> handleMissingParams(MissingServletRequestParameterException e, HttpServletRequest request) {
         StandardErrorDTO error = new StandardErrorDTO(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Missing Parameter",
-                "O parâmetro de URL obrigatório '" + e.getParameterName() + "' está ausente.",
+                "The url parameter '" + e.getParameterName() + "' is missing.",
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -85,7 +84,7 @@ public class GlobalExceptionHandler {
                 Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(), // HTTP 401
                 "Authentication Failed",
-                "E-mail ou senha incorretos.", // Mensagem genérica e segura!
+                "Email or password incorrect.", // Mensagem genérica e segura!
                 request.getRequestURI()
         );
 
@@ -97,23 +96,56 @@ public class GlobalExceptionHandler {
                 Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(), // 401
                 "Token Expired",
-                "O seu token de acesso expirou. Por favor, faça login novamente.",
+                "Access token expired, please log in again.",
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
     // 2. Tratamento para Token Inválido (Malformado, assinatura errada, etc)
-    @ExceptionHandler()
+    @ExceptionHandler(JwtException.class)
     public ResponseEntity<StandardErrorDTO> handleInvalidToken(JwtException e, HttpServletRequest request) {
         StandardErrorDTO error = new StandardErrorDTO(
                 Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(), // 401
                 "Invalid Token",
-                "O token fornecido é inválido ou foi adulterado.",
+                "Invalid token.",
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<StandardErrorDTO> handleNoSuchElement(NoSuchElementException e, HttpServletRequest request) {
+        StandardErrorDTO error = new StandardErrorDTO(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(), // 401
+                "Not Found",
+                "Element not found.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<StandardErrorDTO> handleEntityNotFound(EntityNotFoundException e, HttpServletRequest request) {
+        StandardErrorDTO error = new StandardErrorDTO(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(), // 401
+                "Not Found",
+                "Entity not found.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<StandardErrorDTO> handleNoResourceFound(NoResourceFoundException e, HttpServletRequest request) {
+        StandardErrorDTO error = new StandardErrorDTO(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(), // 401
+                "Not Found",
+                "invalid route.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
 }

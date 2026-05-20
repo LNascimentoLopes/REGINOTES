@@ -1,8 +1,12 @@
 package LNascimento.Note_Taking_app.Services;
 
+import LNascimento.Note_Taking_app.Models.BlackList;
+import LNascimento.Note_Taking_app.Repositories.BlackListRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,9 @@ public class jwtService {
     private String SECRET;
     @Value("${api.security.token.expiration:7200000}")
     private String EXPIRATION;
+
+    @Autowired
+    private BlackListRepository repository;
 
     public String generateToken(UserDetails user) {
         return Jwts.builder()
@@ -47,6 +54,29 @@ public class jwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+
+    }
+
+    public void invalidateToken(String token){
+
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            Date expiryDate = claims.getExpiration();
+
+            BlackList blacklisted = new BlackList();
+            blacklisted.setToken(token);
+            blacklisted.setExpiryDate(expiryDate);
+
+            repository.save(blacklisted);
+
+        } catch (JwtException e) {
+
+        }
 
     }
 

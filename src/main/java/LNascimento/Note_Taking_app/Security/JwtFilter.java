@@ -1,5 +1,6 @@
 package LNascimento.Note_Taking_app.Security;
 
+import LNascimento.Note_Taking_app.Repositories.BlackListRepository;
 import LNascimento.Note_Taking_app.Services.CustomUserDetailsService;
 import LNascimento.Note_Taking_app.Services.jwtService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,12 +25,14 @@ public class JwtFilter extends OncePerRequestFilter {
     private final jwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
     private final HandlerExceptionResolver handlerExceptionResolver;
+    private final BlackListRepository repository;
 
 
-    public JwtFilter(jwtService jwtService, CustomUserDetailsService userDetailsService, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
+    public JwtFilter(jwtService jwtService, CustomUserDetailsService userDetailsService, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver, BlackListRepository repository) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.handlerExceptionResolver = handlerExceptionResolver;
+        this.repository = repository;
     }
 
     @Override
@@ -43,13 +46,18 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             String header = request.getHeader("Authorization");
 
+
             if (header == null || !header.startsWith("Bearer ")){
                 filterChain.doFilter(request,response);
                 return;
             }
             String token = header.substring(7);
-            String username = jwtService.extractUsername(token);
 
+
+            if (repository.existsByToken(token)) {
+                throw new JwtException("Este token foi revogado pelo usuário (Logout).");
+            }
+            String username = jwtService.extractUsername(token);
             if (username != null){
                 UserDetails user = userDetailsService.loadUserByUsername(username);
 

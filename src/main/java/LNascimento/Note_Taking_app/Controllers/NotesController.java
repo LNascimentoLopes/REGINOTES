@@ -7,6 +7,7 @@ import LNascimento.Note_Taking_app.Models.Tags;
 import LNascimento.Note_Taking_app.Security.CustomUserDetails;
 import LNascimento.Note_Taking_app.Services.NotesServices;
 import LNascimento.Note_Taking_app.Services.TagsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -78,7 +79,7 @@ public class NotesController {
 
     //tags crud
     @PostMapping("/{uuid}/tags")
-    public ResponseEntity AssignTag(@PathVariable UUID uuid, @RequestBody CreateTagRequest request, @AuthenticationPrincipal CustomUserDetails user){
+    public ResponseEntity AssignTag(@PathVariable UUID uuid, @RequestBody @Valid CreateTagRequest request, @AuthenticationPrincipal CustomUserDetails user){
         tServices.assignTag(user,uuid,request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

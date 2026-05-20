@@ -17,10 +17,10 @@ public interface NoteRepository extends JpaRepository<Notes, UUID> {
     Optional<Notes> findByIdAndUserId (@Param("id") UUID id, @Param("userId") UUID userId);
 
     @Query("SELECT n FROM Notes n LEFT JOIN FETCH n.tags WHERE n.users.id = :userId AND n.deletedAt IS NULL")
-    Page<Notes> findByUserId (@ Param("userId") UUID userId, Pageable pageable);
+    Optional<Page<Notes>> findByUserId (@ Param("userId") UUID userId, Pageable pageable);
 
     @Query("SELECT n FROM Notes n WHERE n.users.id = :userId AND n.deletedAt IS NOT NULL")
-    Page<Notes> findTrashedByUserId (@ Param("userId") UUID userId, Pageable pageable);
+    Optional<Page<Notes>> findTrashedByUserId (@ Param("userId") UUID userId, Pageable pageable);
 
     @Query("SELECT n FROM Notes n WHERE n.users.id = :userId AND n.deletedAt IS NOT NULL AND n.id = :noteId")
     Optional<Notes> findTrashedByIdAndUserId (@Param("noteId") UUID id, @Param("userId") UUID userId);
