@@ -1,0 +1,38 @@
+# ==========================================
+# IDEs (Eclipse, IntelliJ, VS Code)
+# ==========================================
+.idea/
+.vscode/
+*.iml
+*.project
+*.classpath
+*.prefs
+.settings/
+
+# ==========================================
+# Compilados e Build (Maven / Gradle)
+# ==========================================
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+!wrapper/maven-wrapper.jar
+!gradle-wrapper.jar
+
+# ==========================================
+# Logs e OS
+# ==========================================
+*.log
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Segurança e Variáveis de Ambiente
+# ==========================================
+.env
+.env.production
+.env.local
+application-secret.properties
+application-secret.yml
