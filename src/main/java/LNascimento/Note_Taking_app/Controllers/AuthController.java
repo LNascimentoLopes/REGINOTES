@@ -7,6 +7,7 @@ import LNascimento.Note_Taking_app.Services.AuthService;
 import LNascimento.Note_Taking_app.Services.CustomUserDetailsService;
 import LNascimento.Note_Taking_app.Services.RefreshTokenServices;
 import LNascimento.Note_Taking_app.Services.jwtService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Authentication")
 @RequestMapping("/auth")
 public class AuthController {
 

@@ -7,6 +7,7 @@ import LNascimento.Note_Taking_app.Models.Tags;
 import LNascimento.Note_Taking_app.Security.CustomUserDetails;
 import LNascimento.Note_Taking_app.Services.NotesServices;
 import LNascimento.Note_Taking_app.Services.TagsService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/notes")
+@Tag(name = "Notes Management")
 public class NotesController {
 
     @Autowired
