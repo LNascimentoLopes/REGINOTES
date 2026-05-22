@@ -36,6 +36,7 @@ jobs:
           cache: maven
 
       - name: Run build and Maven tests
+        working-directory: ./BackEnd/Note-Taking-app
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/notes_db
           SPRING_DATASOURCE_USERNAME: user
