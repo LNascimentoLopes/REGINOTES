@@ -1,0 +1,61 @@
+<div class="app-shell">
+  <header class="app-header">
+    <div class="logo">
+      <span class="logo-icon">✦</span>
+      <span class="logo-text">Nota</span>
+    </div>
+    <p class="tagline">Write in Markdown. See it rendered.</p>
+  </header>
+
+  <main class="editor-layout">
+
+    <!-- EDIT MODE -->
+    @if (!isPreviewMode) {
+    <section class="pane write-pane">
+      <div class="pane-header">
+        <span class="pane-label">✏ Markdown</span>
+        <button class="btn-clear" (click)="clear()" [disabled]="!markdownContent">
+          Clear
+        </button>
+      </div>
+      <textarea
+        class="markdown-input"
+        [(ngModel)]="markdownContent"
+        placeholder="# Your note title&#10;&#10;Write **bold**, *italic*, `code`, lists...&#10;&#10;- Item one&#10;- Item two"
+        spellcheck="true"
+      ></textarea>
+      <div class="write-footer">
+        <span class="char-count">{{ markdownContent.length }} chars</span>
+        <button
+          class="btn-save"
+          (click)="save()"
+          [disabled]="isLoading || !markdownContent.trim()"
+          [class.loading]="isLoading"
+          [class.saved]="isSaved"
+        >
+          @if (!isLoading && !isSaved) { <span>Save Note</span> }
+          @if (isLoading) { <span>Converting…</span> }
+          @if (isSaved) { <span>✓ Saved!</span> }
+        </button>
+      </div>
+      @if (errorMessage) {
+        <p class="error-msg">⚠ {{ errorMessage }}</p>
+      }
+    </section>
+    }
+
+    <!-- PREVIEW MODE -->
+    @if (isPreviewMode) {
+    <section class="pane preview-pane">
+      <div class="pane-header">
+        <span class="pane-label">👁 Preview</span>
+        <button class="btn-clear" (click)="edit()">
+          ✏ Edit
+        </button>
+      </div>
+      <div class="rendered-output" [innerHTML]="renderedHtml"></div>
+    </section>
+    }
+
+  </main>
+</div>

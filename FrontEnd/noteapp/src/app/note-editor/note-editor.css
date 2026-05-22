@@ -1,0 +1,418 @@
+/* ── Design tokens ──────────────────────────────────────────────── */
+:host {
+  --bg: #0f0f0f;
+  --surface: #181818;
+  --surface-2: #202020;
+  --border: #2e2e2e;
+  --accent: #d4f064;
+  --accent-dim: #a8c04a;
+  --text: #e8e8e2;
+  --text-muted: #6b6b6b;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-body: 'DM Sans', 'Segoe UI', sans-serif;
+  --radius: 10px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Shell ──────────────────────────────────────────────────────── */
+.app-shell {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.tagline {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────── */
+.editor-layout {
+  flex: 1;
+  justify-content: center;
+  display: flex;
+}
+
+.pane {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 50%;
+  box-shadow: var(--shadow);
+}
+
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.pane-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Write pane ─────────────────────────────────────────────────── */
+.markdown-input {
+  flex: 1;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  padding: 1.25rem;
+  caret-color: var(--accent);
+}
+
+.markdown-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.write-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.char-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.btn-save {
+  background: var(--accent);
+  color: #0f0f0f;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, opacity 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #e2ff6e;
+  transform: translateY(-1px);
+}
+
+.btn-save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-save.loading {
+  background: var(--accent-dim);
+  animation: pulse 1s infinite;
+}
+
+.btn-save.saved {
+  background: #64f0a8;
+}
+
+.btn-clear {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-clear:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.btn-clear:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.error-msg {
+  color: #f06464;
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  background: rgba(240, 100, 100, 0.08);
+  border-top: 1px solid rgba(240, 100, 100, 0.2);
+}
+
+/* ── Divider ────────────────────────────────────────────────────── */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.divider-arrow {
+  color: var(--accent);
+  font-size: 1.3rem;
+  opacity: 0.5;
+}
+
+/* ── Preview pane ───────────────────────────────────────────────── */
+.preview-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+.preview-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.preview-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.preview-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.preview-empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.preview-empty .empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.3;
+  animation: spin 8s linear infinite;
+}
+
+.preview-empty p {
+  font-size: 0.85rem;
+  max-width: 200px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Rendered HTML content styling ─────────────────────────────── */
+.rendered-content {
+  font-size: 0.93rem;
+  line-height: 1.8;
+  color: var(--text);
+  animation: fadeIn 0.3s ease;
+}
+
+.rendered-content ::ng-deep h1,
+.rendered-content ::ng-deep h2,
+.rendered-content ::ng-deep h3,
+.rendered-content ::ng-deep h4,
+.rendered-content ::ng-deep h5,
+.rendered-content ::ng-deep h6 {
+  color: #fff;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+  font-family: var(--font-body);
+}
+
+.rendered-content ::ng-deep h1 {
+  font-size: 1.7rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4em;
+}
+
+.rendered-content ::ng-deep h2 {
+  font-size: 1.35rem;
+}
+
+.rendered-content ::ng-deep h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.rendered-content ::ng-deep code {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--accent);
+}
+
+.rendered-content ::ng-deep pre {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.rendered-content ::ng-deep pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.rendered-content ::ng-deep ul,
+.rendered-content ::ng-deep ol {
+  padding-left: 1.5rem;
+}
+
+.rendered-content ::ng-deep ul li,
+.rendered-content ::ng-deep ol li {
+  margin: 0.3em 0;
+}
+
+.rendered-content ::ng-deep ul li::marker {
+  color: var(--accent);
+}
+
+.rendered-content ::ng-deep blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  background: rgba(212, 240, 100, 0.05);
+  color: var(--text-muted);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.rendered-content ::ng-deep a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.rendered-content ::ng-deep a:hover {
+  border-color: var(--accent);
+}
+
+.rendered-content ::ng-deep table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.rendered-content ::ng-deep th,
+.rendered-content ::ng-deep td {
+  border: 1px solid var(--border);
+  padding: 0.5em 0.8em;
+  text-align: left;
+}
+
+.rendered-content ::ng-deep th {
+  background: var(--surface-2);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.rendered-content ::ng-deep tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.rendered-content ::ng-deep hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
+
+/* ── Animations ─────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .app-shell {
+    padding: 1rem;
+  }
+
+  .editor-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 40px 1fr;
+  }
+
+  .divider {
+    transform: rotate(90deg);
+  }
+}
