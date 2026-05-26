@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; 
+  box-sizing: border-box; /* Highly recommended so padding doesn't break your widths */
+}
+/* styles.css (global) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #2f2f2f;
+  color: #F3F9D2;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}

@@ -1,0 +1,97 @@
+<header>
+  <div class="logo">
+    <img class="logo-icon" src="Logo.png" alt="Logo" />
+    <div class="logo-text">REGI<br />NOTES</div>
+  </div>
+  <div class="header-right">
+    <button class="btn-icon" title="Trash" (click)="router.navigate(['/trash'])">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+    </button>
+    <button class="btn-icon" title="Logout" (click)="logout()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+    </button>
+    <span class="username">{{ username }}</span>
+    <div class="avatar"></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="new-section">
+    <span class="new-label">New</span>
+    <button onclick="window.location.href = '/edit'" class="btn-new" title="Create new note">
+      <svg viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="section-heading">RECENTS</div>
+  <div class="recents-grid" id="recents">
+    @for (note of recentNotes; track note.id) {
+      <div class="recent-card " (click)="openNote(note.id)">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+        </div>
+        <div class="card-meta">
+          <div class="card-name">{{ note.title }}</div>
+          <div class="card-date">{{ note.updatedAt | date: 'mediumDate' }}</div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="notes-header">
+    <div class="section-heading" style="margin-bottom: 0">NOTES</div>
+    <div class="notes-actions">
+      <button class="btn-icon" title="Search">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="16.5" y1="16.5" x2="22" y2="22" />
+        </svg>
+      </button>
+      <button class="btn-icon" title="Tag">
+        <svg viewBox="0 0 24 24">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+          <line x1="7" y1="7" x2="7.01" y2="7" />
+        </svg>
+      </button>
+      <button class="btn-icon" title="Sort">
+        <svg viewBox="0 0 24 24">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <polyline points="19 12 12 19 5 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="notes-grid" id="notes">
+    @for (note of notes; track note.id) {
+      <div class="note-cell" (click)="openNote(note.id)">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+        </div>
+        <div class="card-meta">
+          <div class="card-name">{{ note.title }}</div>
+          <div class="card-date">{{ note.updatedAt | date: 'mediumDate' }}</div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="pagination">
+    <button class="btn-page" title="Previous" (click)="prevPage()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+    </button>
+    <button class="btn-page" title="Next" (click)="nextPage()">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+    </button>
+  </div>
+</main>

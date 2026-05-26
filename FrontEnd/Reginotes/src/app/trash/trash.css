@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #2f2f2f;
+  color: #F3F9D2;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ─────────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  background: #363837;
+  border-bottom: 1px solid #ffffff0a;
+}
+
+.logo { display: flex; align-items: center; gap: 12px; }
+
+.logo-icon {
+  width: 50px; height: 50px;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900; font-size: 18px;
+  color: #2f2f2f;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900; font-size: 22px;
+  line-height: 1.15; letter-spacing: 0.04em;
+  color: #F3F9D2;
+}
+
+.header-right { display: flex; align-items: center; gap: 16px; }
+
+.btn-icon {
+  width: 36px; height: 36px;
+  background: #363837;
+  border: 2px solid #F3F9D2;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.btn-icon:hover { background: #48514D; transform: translateY(-2px); }
+.btn-icon svg { width: 16px; height: 16px; stroke: #F3F9D2; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.username { font-size: 13px; color: #F3F9D2; letter-spacing: .06em; }
+
+.avatar {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: #48514D;
+  border: 2px solid #F3F9D2;
+}
+
+/* ── MAIN ───────────────────────────────────── */
+main { padding: 32px 32px 60px; max-width: 960px; margin: 0 auto; }
+
+/* ── SECTION HEADING ────────────────────────── */
+.section-heading {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800; font-size: 20px;
+  letter-spacing: .06em; color: #F3F9D2;
+  margin-bottom: 16px;
+}
+
+.notes-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+/* ── NOTES GRID ─────────────────────────────── */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  border: 1px solid #ffffff08;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff06;
+  margin-bottom: 20px;
+}
+
+.note-cell {
+  background: #3C403E;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  transition: background .15s;
+  border-right: 1px solid #ffffff06;
+  animation: fadeUp .3s ease both;
+}
+.note-cell:nth-child(4n) { border-right: none; }
+
+/* ── FILE ICON ──────────────────────────────── */
+.file-icon {
+  width: 28px; height: 28px;
+  background: #2f2f2f;
+  border-radius: 6px;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.file-icon svg { width: 14px; height: 14px; stroke: #e0eeff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── CARD META ──────────────────────────────── */
+.card-meta { overflow: hidden; flex: 1; }
+.card-name {
+  font-size: 11px; font-weight: 500;
+  color: #F3F9D2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: .04em;
+}
+.card-date { font-size: 10px; color: #6D837A; margin-top: 2px; }
+
+/* ── NOTE ACTIONS ───────────────────────────── */
+.note-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.btn-delete,
+.btn-restore {
+  width: 30px; height: 30px;
+  background: #2f2f2f;
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .15s;
+  flex-shrink: 0;
+}
+
+.btn-delete svg { width: 14px; height: 14px; stroke: #e05c5c; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-restore svg { width: 14px; height: 14px; stroke: #6fcf97; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.btn-delete:hover { background: rgba(224, 92, 92, 0.15); border-color: #e05c5c; transform: translateY(-2px); }
+.btn-restore:hover { background: rgba(111, 207, 151, 0.15); border-color: #6fcf97; transform: translateY(-2px); }
+
+/* ── PAGINATION ─────────────────────────────── */
+.pagination { display: flex; justify-content: center; gap: 8px; }
+
+.btn-page {
+  width: 32px; height: 32px;
+  background: #2f2f2f;
+  border: 1px solid #F3F9D2;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.btn-page:hover { background: #48514D; transform: translateY(-2px); }
+.btn-page svg { width: 14px; height: 14px; stroke: #F3F9D2; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── FADE-IN ANIMATION ──────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 700px) {
+  .notes-grid { grid-template-columns: repeat(2, 1fr); }
+  main { padding: 20px 16px 48px; }
+  header { padding: 14px 18px; }
+}
