@@ -90,6 +90,7 @@ main { padding: 32px 32px 60px; max-width: 960px; margin: 0 auto; }
 }
 
 .note-cell {
+  min-width: 0;
   background: #3C403E;
   padding: 10px 14px;
   display: flex; align-items: center; gap: 10px;
@@ -110,7 +111,8 @@ main { padding: 32px 32px 60px; max-width: 960px; margin: 0 auto; }
 .file-icon svg { width: 14px; height: 14px; stroke: #e0eeff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ── CARD META ──────────────────────────────── */
-.card-meta { overflow: hidden; flex: 1; }
+.card-meta { overflow: hidden;
+  min-width: 0; }
 .card-name {
   font-size: 11px; font-weight: 500;
   color: #F3F9D2;

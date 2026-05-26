@@ -1,60 +1,87 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject, runInInjectionContext, EnvironmentInjector } from '@angular/core';
+import {
+  HttpInterceptorFn,
+  HttpErrorResponse,
+  HttpBackend,
+  HttpClient,
+} from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, switchMap, throwError, BehaviorSubject, filter, take } from 'rxjs';
+
+// Variáveis globais fora da função para manter o estado entre requisições
+let isRefreshing = false;
+let refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('token');
-  const injector = inject(EnvironmentInjector);
+  const router = inject(Router);
 
-  // ✅ Don't attach expired token to auth endpoints
+  // ✅ Injetamos o HttpBackend para criar um HttpClient que IGNORA os interceptores
+  const httpBackend = inject(HttpBackend);
+  const http = new HttpClient(httpBackend);
+
+  const token = localStorage.getItem('token');
   const isAuthUrl = req.url.includes('/auth/');
-  const authReq = token && !isAuthUrl
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-    : req;
+
+  const authReq =
+    token && !isAuthUrl ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      // Se deu 401 e não é a própria rota de refresh falhando
       if (error.status === 401 && !req.url.includes('/auth/refresh')) {
+        // Se já tem um refresh acontecendo, coloca na fila
+        if (isRefreshing) {
+          return refreshTokenSubject.pipe(
+            filter((newToken) => newToken !== null),
+            take(1),
+            switchMap((newToken) => {
+              return next(req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } }));
+            }),
+          );
+        }
+
+        // Se NÃO tem um refresh acontecendo, nós iniciamos um
+        isRefreshing = true;
+        refreshTokenSubject.next(null); // Reseta o subject
+
         const refreshToken = localStorage.getItem('refreshToken');
+
         if (!refreshToken) {
+          isRefreshing = false;
           localStorage.clear();
-          runInInjectionContext(injector, () => inject(Router).navigate(['/login']));
+          router.navigate(['/login']);
           return throwError(() => error);
         }
 
-        return runInInjectionContext(injector, () => {
-          const http = inject(HttpClient);
-          const router = inject(Router);
+        // Faz o POST usando o HttpClient "puro"
+        return http.post<any>('http://localhost:8080/auth/refresh', { refreshToken }).pipe(
+          switchMap((response) => {
+            isRefreshing = false;
 
-          // ✅ Send refresh without any Authorization header
-          const refreshReq = new (req.constructor as any)(
-            'POST',
-            'http://localhost:8080/auth/refresh',
-            { refreshToken }
-          );
+            // Pegando as chaves com os nomes EXATOS que o back-end mandou
+            const newToken = response.Token; // T maiúsculo!
+            const newRefreshToken = response.refreshToken;
 
-          return http.post<string>(
-            'http://localhost:8080/auth/refresh',
-            { refreshToken }
-          ).pipe(
-            switchMap((newToken: string) => {
-              localStorage.setItem('token', newToken);
-              const retryReq = req.clone({
-                setHeaders: { Authorization: `Bearer ${newToken}` }
-              });
-              return next(retryReq);
-            }),
-            catchError((refreshError) => {
-              localStorage.clear();
-              router.navigate(['/login']);
-              return throwError(() => refreshError);
-            })
-          );
-        });
+            // Atualizando os dois tokens no Local Storage
+            localStorage.setItem('token', newToken);
+            if (newRefreshToken) {
+              localStorage.setItem('refreshToken', newRefreshToken);
+            }
+
+            // Avisa a fila de espera qual é o novo token de acesso
+            refreshTokenSubject.next(newToken);
+
+            // Clona e refaz a requisição que tinha dado erro
+            const retryReq = req.clone({
+              setHeaders: { Authorization: `Bearer ${newToken}` },
+            });
+            return next(retryReq);
+          }),
+        );
       }
+
+      // Se não for 401, só repassa o erro pra frente
       return throwError(() => error);
-    })
+    }),
   );
 };
