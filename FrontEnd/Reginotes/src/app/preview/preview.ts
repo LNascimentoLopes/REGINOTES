@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 interface Tag {
   id: string;
@@ -22,6 +23,7 @@ export class Preview implements OnInit {
   noteId: string | null = null;
   title = '';
   contentHtml = '';
+  private readonly API_URL = environment.apiUrl;
 
   // Tag state
   noteTags: Tag[] = [];
@@ -51,7 +53,7 @@ export class Preview implements OnInit {
   logout(): void {
     const refreshToken = localStorage.getItem('refreshToken');
     this.http
-      .delete('http://localhost:8080/auth/logout', {
+      .delete(`${this.API_URL}/auth/logout`, {
         body: { refreshToken },
       })
       .subscribe({
@@ -69,7 +71,7 @@ export class Preview implements OnInit {
   }
 
   fetchNote(id: string): void {
-    this.http.get<any>(`http://localhost:8080/notes/${id}`).subscribe({
+    this.http.get<any>(`${this.API_URL}/notes/${id}`).subscribe({
       next: (note) => {
         this.title = note.title;
         this.contentHtml = note.contentHtml;
@@ -85,7 +87,7 @@ export class Preview implements OnInit {
   }
 
   fetchAllTags(): void {
-    this.http.get<any>('http://localhost:8080/notes/tags').subscribe({
+    this.http.get<any>(`${this.API_URL}/notes/tags`).subscribe({
       next: (response) => {
         console.log('RegiNotes Backend Tags:', response);
 
@@ -132,7 +134,7 @@ export class Preview implements OnInit {
     const isAssigned = this.isTagAssigned(tag);
 
     if (isAssigned) {
-      this.http.delete(`http://localhost:8080/notes/${this.noteId}/tags/${tag.id}`).subscribe({
+      this.http.delete(`${this.API_URL}/notes/${this.noteId}/tags/${tag.id}`).subscribe({
         next: () => {
           // Force a new array reference when removing a tag
           this.noteTags = this.noteTags.filter((t: any) => t.id !== tag.id);
@@ -147,7 +149,7 @@ export class Preview implements OnInit {
         tagColor: tag.tagColor,
       };
 
-      this.http.post(`http://localhost:8080/notes/${this.noteId}/tags`, payload).subscribe({
+      this.http.post(`${this.API_URL}/notes/${this.noteId}/tags`, payload).subscribe({
         next: (savedTag: any) => {
           // FIX: Force a brand new array reference so Angular instantly re-renders the DOM
           this.noteTags = [...this.noteTags, tag];
@@ -171,7 +173,7 @@ export class Preview implements OnInit {
     this.tagError = '';
 
     this.http
-      .post<any>(`http://localhost:8080/notes/${this.noteId}/tags`, {
+      .post<any>(`${this.API_URL}/notes/${this.noteId}/tags`, {
         tagName,
         tagColor: this.newTagColor,
       })
@@ -200,7 +202,7 @@ export class Preview implements OnInit {
   removeNoteTag(tag: Tag, event: MouseEvent): void {
     event.stopPropagation();
     if (!this.noteId) return;
-    this.http.delete(`http://localhost:8080/notes/${this.noteId}/tags/${tag.id}`).subscribe({
+    this.http.delete(`${this.API_URL}/notes/${this.noteId}/tags/${tag.id}`).subscribe({
       next: () => {
         this.noteTags = this.noteTags.filter((t) => t.id !== tag.id);
         this.cdr.detectChanges();
@@ -217,7 +219,7 @@ export class Preview implements OnInit {
 
   deleteNote(): void {
     if (!this.noteId) return;
-    this.http.delete(`http://localhost:8080/notes/${this.noteId}`).subscribe({
+    this.http.delete(`${this.API_URL}/notes/${this.noteId}`).subscribe({
       next: () => this.router.navigate(['/home']),
       error: (err) => console.error('Failed to delete note', err),
     });
@@ -242,7 +244,7 @@ export class Preview implements OnInit {
       event.stopPropagation(); // Essential: stops parent action triggers
     }
 
-    this.http.delete(`http://localhost:8080/notes/tags/${tag.id}`).subscribe({
+    this.http.delete(`${this.API_URL}/notes/tags/${tag.id}`).subscribe({
       next: () => {
         // Purge deleted tag from arrays using clean reference copies
         this.allTags = (this.allTags ?? []).filter((t: any) => t && t.id !== tag.id);

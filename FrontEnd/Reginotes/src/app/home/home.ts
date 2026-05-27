@@ -3,6 +3,7 @@ import { DatePipe, NgIf } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 interface Note {
   id: string;
@@ -48,6 +49,7 @@ export class Home implements OnInit {
   // Displayed after filters applied
   notes: Note[] = [];
   recentNotes: Note[] = [];
+  private readonly API_URL = environment.apiUrl;
 
   page = 0;
   pageSize = 32;
@@ -107,7 +109,7 @@ export class Home implements OnInit {
 
   fetchAllTags(): void {
     const params = new HttpParams().set('page', 0).set('size', 100);
-    this.http.get<TagPageResponse>('http://localhost:8080/notes/tags', { params }).subscribe({
+    this.http.get<TagPageResponse>(`${this.API_URL}/notes/tags`, { params }).subscribe({
       next: (data) => {
         this.availableTags = data.content;
         this.cdr.detectChanges();
@@ -171,7 +173,7 @@ export class Home implements OnInit {
       .set('size', 200)
       .set('sort', `updatedAt,${this.sortDirection}`);
 
-    this.http.get<PageResponse>('http://localhost:8080/notes', { params }).subscribe({
+    this.http.get<PageResponse>(`${this.API_URL}/notes`, { params }).subscribe({
       next: (data) => {
         this.allNotes = data.content;
         this.applyFilters();
@@ -182,7 +184,7 @@ export class Home implements OnInit {
 
   fetchRecents(): void {
     const params = new HttpParams().set('page', 0).set('size', 4).set('sort', 'updatedAt,desc');
-    this.http.get<PageResponse>('http://localhost:8080/notes', { params }).subscribe({
+    this.http.get<PageResponse>(`${this.API_URL}/notes`, { params }).subscribe({
       next: (data) => {
         this.recentNotes = data.content;
         this.cdr.detectChanges();
@@ -193,7 +195,7 @@ export class Home implements OnInit {
 
   logout(): void {
     const refreshToken = localStorage.getItem('refreshToken');
-    this.http.delete('http://localhost:8080/auth/logout', { body: { refreshToken } }).subscribe({
+    this.http.delete(`${this.API_URL}/auth/logout`, { body: { refreshToken } }).subscribe({
       next: () => this._clearAndRedirect(),
       error: () => this._clearAndRedirect(),
     });

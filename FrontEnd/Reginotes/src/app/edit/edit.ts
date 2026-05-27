@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule, ActivatedRoute } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit',
@@ -15,6 +16,8 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
   styleUrls: ['./edit.css'],
 })
 export class Edit implements OnInit {
+
+
   markdownContent = '';
   renderedHtml = '';
   title = '';
@@ -31,6 +34,8 @@ export class Edit implements OnInit {
     private http: HttpClient,
   ) {}
 
+   private readonly API_URL = environment.apiUrl;
+
   ngOnInit(): void {
     this.noteId = this.route.snapshot.paramMap.get('id');
     if (this.noteId) {
@@ -42,7 +47,7 @@ export class Edit implements OnInit {
 logout(): void {
   const refreshToken = localStorage.getItem('refreshToken');
 
-  this.http.delete('http://localhost:8080/auth/logout', {
+  this.http.delete(`${this.API_URL}/auth/logout`, {
     body: { refreshToken }
   }).subscribe({
     next: () => {

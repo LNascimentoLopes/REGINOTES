@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 interface Note {
   id: string;
@@ -28,6 +29,8 @@ export class Trash implements OnInit {
   totalPages = 0;
   username = localStorage.getItem('username') ?? 'User';
 
+  private readonly API_URL = environment.apiUrl;
+
   constructor(public router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -40,7 +43,7 @@ export class Trash implements OnInit {
       .set('size', 6)
       .set('sort', 'deletedAt,desc');
 
-    this.http.get<PageResponse>('http://localhost:8080/notes/trash', { params }).subscribe({
+    this.http.get<PageResponse>(`${this.API_URL}/notes/trash`, { params }).subscribe({
       next: (data) => {
         this.notes = data.content;
         this.totalPages = data.totalPages;
@@ -51,14 +54,14 @@ export class Trash implements OnInit {
   }
 
   restore(id: string): void {
-    this.http.patch(`http://localhost:8080/notes/trash/${id}/restore`, {}).subscribe({
+    this.http.patch(`${this.API_URL}/notes/trash/${id}/restore`, {}).subscribe({
       next: () => this.fetchTrash(),
       error: (err) => console.error('Failed to restore note', err)
     });
   }
 
   deletePermanently(id: string): void {
-    this.http.delete(`http://localhost:8080/notes/trash/${id}/delete`).subscribe({
+    this.http.delete(`${this.API_URL}/notes/trash/${id}/delete`).subscribe({
       next: () => this.fetchTrash(),
       error: (err) => console.error('Failed to delete note', err)
     });
@@ -80,7 +83,7 @@ export class Trash implements OnInit {
 
   logout(): void {
     const refreshToken = localStorage.getItem('refreshToken');
-    this.http.delete('http://localhost:8080/auth/logout', { body: { refreshToken } }).subscribe({
+    this.http.delete(`${this.API_URL}/auth/logout`, { body: { refreshToken } }).subscribe({
       next: () => this._clearAndRedirect(),
       error: () => this._clearAndRedirect()
     });

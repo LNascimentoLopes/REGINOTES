@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap } from 'rxjs';
+import { environment } from '../../environments/environments';
 
 export interface LoginResponse {
   Token: string;
@@ -11,11 +12,12 @@ export interface LoginRequest {
   email: string;
   password: string;
 }
+const API_URL = environment.apiUrl;
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  private readonly apiUrl = 'http://localhost:8080/auth/login';
+  private readonly apiUrl = `${API_URL}/auth/login`;
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<LoginResponse> {

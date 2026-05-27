@@ -3,6 +3,7 @@ import { RegisterService } from './register.service';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Register {
   username = '';
+  private readonly API_URL = environment.apiUrl;
   email = '';
   password = '';
   confirmPassword = '';

@@ -6,15 +6,17 @@ import {
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { catchError, switchMap, throwError, BehaviorSubject, filter, take } from 'rxjs';
 
 // Variáveis globais fora da função para manter o estado entre requisições
 let isRefreshing = false;
 let refreshTokenSubject = new BehaviorSubject<string | null>(null);
+const API_URL = environment.apiUrl;
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-
+  
   // ✅ Injetamos o HttpBackend para criar um HttpClient que IGNORA os interceptores
   const httpBackend = inject(HttpBackend);
   const http = new HttpClient(httpBackend);
@@ -54,7 +56,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         }
 
         // Faz o POST usando o HttpClient "puro"
-        return http.post<any>('http://localhost:8080/auth/refresh', { refreshToken }).pipe(
+        return http.post<any>(`${API_URL}/auth/refresh`, { refreshToken }).pipe(
           switchMap((response) => {
             isRefreshing = false;
 

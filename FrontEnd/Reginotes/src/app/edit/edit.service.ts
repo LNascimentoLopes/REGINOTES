@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap } from 'rxjs';
+import { environment } from '../../environments/environments';
 
 export interface MarkdownResponse {
   id: string;
@@ -12,13 +13,14 @@ export interface MarkdownResponse {
   deletedAt: string | null;
   tags: { id: string; name: string }[];
 }
+const API_URL = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root',
 })
 export class NoteService {
   // 🔧 Change this to your backend URL
-  private readonly apiUrl = 'http://localhost:8080/notes';
+  private readonly apiUrl = `${API_URL}/notes`;
   constructor(private http: HttpClient) {}
 
   getNoteById(uuid: string): Observable<MarkdownResponse> {
