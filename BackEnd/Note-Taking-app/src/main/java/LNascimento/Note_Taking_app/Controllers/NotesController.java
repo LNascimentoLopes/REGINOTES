@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,13 +36,13 @@ public class NotesController {
 
     //basic crud
     @PostMapping
-    public ResponseEntity<Map<String,String>> Create(@RequestBody NoteRequest request, @AuthenticationPrincipal CustomUserDetails user){
+    public ResponseEntity<createNotesResponse> Create(@RequestBody NoteRequest request, @AuthenticationPrincipal CustomUserDetails user){
 
-            Notes note = nServices.saveNote(request,user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("html", note.getContentHtml()));
+            createNotesResponse response = nServices.saveNote(request,user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @GetMapping
-    public ResponseEntity<Page<getNotesResponse>> GetAllNotes(@RequestParam(required = false)String tag, @AuthenticationPrincipal CustomUserDetails user, Pageable pageable){
+    public ResponseEntity<Page<getNotesResponse>> GetAllNotes(@PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) @AuthenticationPrincipal CustomUserDetails user, Pageable pageable){
             Page<getNotesResponse> allNotes = nServices.getAllNotes(user, pageable);
             return ResponseEntity.status(HttpStatus.OK).body(allNotes);
     }
@@ -64,7 +66,7 @@ public class NotesController {
 
     //trash crud
     @GetMapping ("/trash")
-    public ResponseEntity<Page<getNotesResponse>> GetAllTrashedNotes(@RequestParam(required = false)String tag, @AuthenticationPrincipal CustomUserDetails user, Pageable pageable){
+    public ResponseEntity<Page<getNotesResponse>> GetAllTrashedNotes(@PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) @AuthenticationPrincipal CustomUserDetails user, Pageable pageable){
             Page<getNotesResponse> allNotes = nServices.getAllTrashedNotes(user, pageable);
             return ResponseEntity.status(HttpStatus.OK).body(allNotes);
     }
@@ -96,7 +98,7 @@ public class NotesController {
         return ResponseEntity.ok("");
     }
     @GetMapping("/tags")
-    public ResponseEntity<Page<TagResponseDTO>> GetAllTags(@AuthenticationPrincipal CustomUserDetails user, Pageable pageable){
+    public ResponseEntity<Page<TagResponseDTO>> GetAllTags( @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC)@AuthenticationPrincipal CustomUserDetails user, Pageable pageable){
         Page<TagResponseDTO> tags = tServices.getTags(user, pageable);
 
         return ResponseEntity.ok(tags);

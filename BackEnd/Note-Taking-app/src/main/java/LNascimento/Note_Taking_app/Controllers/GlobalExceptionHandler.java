@@ -6,6 +6,7 @@ import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -143,6 +144,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(), // 401
                 "Not Found",
                 "invalid route.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<StandardErrorDTO> invalidDataApiUsage(InvalidDataAccessApiUsageException e, HttpServletRequest request) {
+        StandardErrorDTO error = new StandardErrorDTO(
+                Instant.now(),
+                HttpStatus.BAD_REQUEST.value(), // 401
+                "Bad Request",
+                "invalid sorting method.",
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);

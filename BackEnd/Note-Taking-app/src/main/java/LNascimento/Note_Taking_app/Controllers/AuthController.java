@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Tag(name = "Authentication")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -47,9 +48,9 @@ public class AuthController {
     }
 
     @PostMapping("refresh")
-    public ResponseEntity Refresh (@RequestBody @Valid refreshRequest request, @AuthenticationPrincipal CustomUserDetails user){
+    public ResponseEntity Refresh (@RequestBody @Valid refreshRequest request){
 
-        loginResponse response = refreshTokenServices.generateNewTokens(request.refreshToken(), user.getUser());
+        loginResponse response = refreshTokenServices.generateNewTokens(request.refreshToken());
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }

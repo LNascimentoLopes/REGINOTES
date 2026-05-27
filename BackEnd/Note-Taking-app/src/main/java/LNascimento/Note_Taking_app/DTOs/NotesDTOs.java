@@ -31,4 +31,5 @@ public class NotesDTOs {
             UUID id,
             Set<TagDTOs.TagResponseDTO> tags // Ou Set<TagDTO> tags
     ) {}
+    public record createNotesResponse(String contentHtml,UUID id){}
 }

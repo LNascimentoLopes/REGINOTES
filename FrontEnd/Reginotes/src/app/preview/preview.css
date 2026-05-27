@@ -96,14 +96,16 @@ header {
   align-items: center;
   justify-content: center;
   width: 47%;
-  height: 49em;
+  height: 100%;
   gap: 12px;
+  min-height: 400px;
 }
 .preview-area{
   padding: 24px 32px 16px ;
   line-height: 1.6;
   width: 320%;
-  height: 50em;
+  height: 100%;
+  min-height: 400px;
 }
 .preview-area{
   width: 100%;

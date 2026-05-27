@@ -1,6 +1,5 @@
 package LNascimento.Note_Taking_app.Services;
 
-import LNascimento.Note_Taking_app.DTOs.NotesDTOs;
 import LNascimento.Note_Taking_app.DTOs.NotesDTOs.*;
 import LNascimento.Note_Taking_app.Models.Notes;
 import LNascimento.Note_Taking_app.Repositories.NoteRepository;
@@ -39,7 +38,7 @@ public class NotesServices {
     }
 
     @Transactional
-    public Notes saveNote (NoteRequest request, CustomUserDetails user){
+    public createNotesResponse saveNote (NoteRequest request, CustomUserDetails user){
 
         Notes note = new Notes();
 
@@ -51,8 +50,11 @@ public class NotesServices {
         String Markdown = note.getContentMarkdown();
         String Html = markToHtml(Markdown);
         note.setContentHtml(Html);
+        repository.save(note);
 
-        return repository.save(note);
+        return new createNotesResponse(note.getContentHtml(),note.getId());
+
+
     }
 
     public getNotesResponse getNoteById(UUID id, CustomUserDetails user){

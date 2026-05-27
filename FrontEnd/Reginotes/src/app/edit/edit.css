@@ -97,12 +97,13 @@ header {
   align-items: center;
   justify-content: center;
   gap: 12px;
+  min-height: 400px;
 }
 .editor{
   padding: 24px 32px;
   width: 320%;
-  height: 50em;
-
+  height: 100%;
+  min-height: 400px;
 }
 .editor textarea {
   width: 100%;

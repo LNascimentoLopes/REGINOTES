@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RegisterService } from './register.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,RouterModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -29,7 +29,10 @@ export class Register {
     }
 
     this.registerService.register(this.username, this.email, this.password).subscribe({
-      next: () => this.router.navigate(['/login']),
+      next: (res) => {
+        console.log('next disparou:', res);
+        this.router.navigate(['/login']);
+      },
       error: () => this.error = 'Registration failed. Try again.'
     });
   }

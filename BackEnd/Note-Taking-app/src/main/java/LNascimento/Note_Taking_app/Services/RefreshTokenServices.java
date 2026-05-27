@@ -40,7 +40,7 @@ public class RefreshTokenServices {
 
     // 2. Método que processa a rota de Refresh
     @Transactional
-    public loginResponse generateNewTokens(String tokenAlvo, Users user) {
+    public loginResponse generateNewTokens(String tokenAlvo) {
 
         RefreshToken refreshToken = refreshTokenRepository.findByToken(tokenAlvo)
                 .orElseThrow(() -> new JwtException("Refresh Token inválido ou não encontrado no sistema."));

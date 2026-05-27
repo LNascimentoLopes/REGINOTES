@@ -16,7 +16,7 @@ export class RegisterService {
 
   register(username: string, email: string, password: string): Observable<any> {
     const request: registerRequest = { username, email, password };
-    return this.http.post(this.apiUrl, request);
+    return this.http.post(this.apiUrl, request,  { responseType: 'text' });
   }
 }
 
