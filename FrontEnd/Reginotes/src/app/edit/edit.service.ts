@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap } from 'rxjs';
-import { environment } from '../../environments/environment.dev';
+import { environment } from '../../environments/environment';
 
 export interface MarkdownResponse {
   id: string;
