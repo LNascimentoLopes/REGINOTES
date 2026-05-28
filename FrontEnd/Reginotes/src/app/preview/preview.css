@@ -573,8 +573,6 @@ header {
     left: 0;
     right: 0;
     width: 100%;
-    border-radius: 16px 16px 0 0;
-    border-bottom: none;
     padding: 20px 16px;
     box-sizing: border-box;
   }
@@ -588,4 +586,33 @@ header {
     padding: 0 16px;
     justify-content: flex-start;
   }
+  .tag-wrapper {
+    position: static; 
+  }
+
+  .tag-panel {
+    position: fixed;
+    bottom: 90px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 16px;
+    padding: 20px 16px 32px; /* padding extra embaixo pro safe area */
+    box-sizing: border-box;
+    z-index: 200;
+  }
+
+  /* Overlay que fecha ao tocar fora */
+  .tag-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: #0006;
+    z-index: 199;
+  }
+}
+
+/* Escondido fora do mobile */
+.tag-overlay {
+  display: none;
 }
