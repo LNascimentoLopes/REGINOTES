@@ -81,7 +81,7 @@ export class Home implements OnInit {
   }
 
   openNote(id: string): void {
-    this.router.navigate(['/edit', id]);
+    this.router.navigate(['/preview', id]);
   }
 
   // ── SEARCH ───────────────────────────────────
