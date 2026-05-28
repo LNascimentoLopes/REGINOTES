@@ -170,7 +170,61 @@ main { padding: 32px 32px 60px; max-width: 960px; margin: 0 auto; }
 
 /* ── RESPONSIVE ─────────────────────────────── */
 @media (max-width: 700px) {
-  .notes-grid { grid-template-columns: repeat(2, 1fr); }
-  main { padding: 20px 16px 48px; }
-  header { padding: 14px 18px; }
+  /* ── HEADER ── */
+  header {
+    padding: 12px 16px;
+  }
+
+  .logo-icon {
+    width: 38px; height: 38px;
+    font-size: 15px;
+  }
+
+  .logo-text,
+  .username {
+    display: none;
+  }
+
+  .avatar {
+    width: 38px; height: 38px;
+  }
+
+  .header-right {
+    gap: 10px;
+  }
+
+  /* ── MAIN ── */
+  main {
+    padding: 20px 16px 48px;
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    font-size: 17px;
+  }
+
+  .notes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* ── NOTES GRID ── */
+  .notes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .note-cell:nth-child(4n) {
+    border-right: 1px solid #ffffff06;
+  }
+
+  .note-cell:nth-child(2n) {
+    border-right: none;
+  }
+
+  /* ── NOTE ACTIONS ── */
+  .btn-delete,
+  .btn-restore {
+    width: 36px; height: 36px;
+  }
 }
