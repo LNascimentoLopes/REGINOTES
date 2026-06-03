@@ -13,5 +13,4 @@ public class NoteTakingAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NoteTakingAppApplication.class, args);
 	}
-
 }
