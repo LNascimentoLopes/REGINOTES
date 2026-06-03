@@ -7,6 +7,7 @@ body {
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
   overflow:scroll;
+  overflow-x: hidden;
   
 }
 
@@ -97,11 +98,10 @@ header {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  min-height: 400px;
 }
 .editor{
   padding: 24px 32px;
-  width: 320%;
+  width: 800px;
   height: 100%;
   min-height: 400px;
 }
@@ -115,6 +115,7 @@ header {
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   padding: 16px;
+  min-height: 600px;
   resize: vertical;
 }
 .editor textarea:focus {
@@ -169,4 +170,35 @@ header {
   display: flex;
   gap: 32px;
   padding: 0 32px 24px;
+}
+@media (max-width: 720px) {
+  .edit-header {
+    padding: 16px;
+  }
+
+  .edit-title {
+    font-size: 22px;
+  }
+
+  .editor {
+    width: 180%;
+    padding: 0 16px 16px;
+
+    textarea {
+      font-size: 12px;
+      padding: 12px;
+      min-height: 600px;
+    }
+  }
+
+  .edit-btns {
+    padding: 0 16px 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .edit-actions {
+    min-height: unset;
+  }
 }

@@ -9,7 +9,6 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: scroll; 
   box-sizing: border-box; /* Highly recommended so padding doesn't break your widths */
 }
 body {
